@@ -1,0 +1,47 @@
+# HIGHLY EXPERIMENTAL: this packaging is new and has seen no production
+# use. Layout, versioning and repository structure may still change
+# without notice -- do not point production machines at it yet.
+#
+# A host pinned to a RHEL minor release (subscription-manager release
+# --set=9.4) expands $releasever to "9.4", where there is no tree, and
+# every transaction fails on the 404. Set releasever=9 in both stanzas
+# below on such a host.
+#
+[xymon]
+name=Xymon
+baseurl=https://xymon-monitoring.github.io/xymon-rpm/xymon/$releasever/$basearch/
+enabled=1
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://xymon-monitoring.github.io/xymon-rpm/RPM-GPG-KEY-xymon
+
+# Built from the tip of the development branch, several times a week.
+# Disabled by default: these are pre-releases of the next version, and a
+# machine that follows them is running code that has had no release
+# testing. Enable deliberately, per host -- set enabled=1 below, which
+# works anywhere, or run the command your dnf understands:
+#
+#     dnf config-manager --set-enabled xymon-snapshot      # dnf4, EL
+#     dnf config-manager setopt xymon-snapshot.enabled=1   # dnf5, Fedora
+#
+[xymon-snapshot]
+name=Xymon (development snapshots)
+baseurl=https://xymon-monitoring.github.io/xymon-rpm/xymon-snapshot/$releasever/$basearch/
+enabled=0
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://xymon-monitoring.github.io/xymon-rpm/RPM-GPG-KEY-xymon
+
+# Previews of each unreleased milestone, from xymon-experimental: main
+# plus the pull requests left for that release, most of them not reviewed
+# yet. For testing, not production. Every milestone is here at once: plain
+# "dnf install xymon" takes the newest, "dnf install xymon-4.3.32" that
+# one. Disabled by default; enable it the way the snapshot channel above
+# says, naming xymon-preview.
+[xymon-preview]
+name=Xymon (previews of unreleased milestones)
+baseurl=https://xymon-monitoring.github.io/xymon-rpm/xymon-preview/$releasever/$basearch/
+enabled=0
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://xymon-monitoring.github.io/xymon-rpm/RPM-GPG-KEY-xymon
